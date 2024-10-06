@@ -42,8 +42,8 @@ ENV PATH "/home/${USER_NAME}/miniconda3/bin:$PATH"
 RUN conda init && source ~/.bashrc
 
 # IDM-VTON clone
-RUN git clone https://github.com/Lseoksee/IDM-VTON.git
-WORKDIR "/home/${USER_NAME}/IDM-VTON"
+RUN git clone https://github.com/fit-pin/IDM-VTON-FastAPI.git
+WORKDIR "/home/${USER_NAME}/IDM-VTON-FastAPI"
 
 # conda 가상환경 만들고 활성화
 RUN conda env create -f environment.yaml && \

@@ -1,4 +1,6 @@
 __pycache__
+.initfile
+
 ckpt/densepose/*
 ckpt/humanparsing/*
 ckpt/openpose/ckpts/*

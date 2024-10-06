@@ -2,6 +2,7 @@
 import subprocess
 from sys import stdout
 import sys
+from pathlib import Path
 
 """모델 다운로드 부분"""
 urls = [
@@ -52,3 +53,6 @@ print("Huggingface 모델 다운로드 진행중")
 sys.path.append("./gradio_demo")
 from gradio_demo import app
 print("Huggingface 모델 다운로드 완료")
+
+# 완료 파일 생성
+Path('./.initfile').touch()

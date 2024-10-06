@@ -39,18 +39,17 @@ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-$(uname -i).sh 
 bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3 && \
 rm -rf ~/miniconda3/miniconda.sh
 ENV PATH "/home/${USER_NAME}/miniconda3/bin:$PATH"
-RUN conda init
+RUN conda init && source ~/.bashrc
 
 # IDM-VTON clone
 RUN git clone https://github.com/Lseoksee/IDM-VTON.git
 WORKDIR "/home/${USER_NAME}/IDM-VTON"
 
-# conda 가상환경 만들고 활성화 + first-setting.py 실행
+# conda 가상환경 만들고 활성화
 RUN conda env create -f environment.yaml && \
 chmod +x start.sh && \
 source ~/miniconda3/etc/profile.d/conda.sh && \
-conda activate idm && \
-python first-setting.py
+conda activate idm
 
 # 컨테이너 시작시 start.sh 파일 실행
 CMD ["/bin/bash", "-c", "./start.sh"]

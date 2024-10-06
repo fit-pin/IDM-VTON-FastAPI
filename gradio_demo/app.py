@@ -1,8 +1,11 @@
 import sys
 
+import PIL
+import PIL.Image
+import cv2
+
 sys.path.append("./")
 from PIL import Image
-import gradio as gr
 from src.tryon_pipeline import StableDiffusionXLInpaintPipeline as TryonPipeline
 from src.unet_hacked_garmnet import UNet2DConditionModel as UNet2DConditionModel_ref
 from src.unet_hacked_tryon import UNet2DConditionModel
@@ -13,7 +16,7 @@ from transformers import (
     CLIPTextModelWithProjection,
 )
 from diffusers import DDPMScheduler, AutoencoderKL
-from typing import List
+from typing import Any, List, Literal
 
 import torch
 import os
@@ -48,7 +51,6 @@ def pil_to_binary_mask(pil_image, threshold=0):
 
 
 base_path = "yisol/IDM-VTON"
-example_path = os.path.join(os.path.dirname(__file__), "example")
 
 unet = UNet2DConditionModel.from_pretrained(
     base_path,
@@ -131,10 +133,13 @@ pipe.unet_encoder = UNet_Encoder
 
 
 def start_tryon(
-    dict, garm_img, garment_des, is_checked, is_checked_crop, denoise_steps, seed
+    dict: dict[Literal["background", "layers", "composite"], Any],
+    garm_img: PIL.Image.Image,
+    is_checked: bool,
+    is_checked_crop: bool,
+    denoise_steps: int,
+    seed: int,
 ):
-    print({"dict": dict})
-    print({"garm_img": " "})
 
     openpose_model.preprocessor.body_estimation.model.to(device)
     pipe.to(device)
@@ -193,7 +198,7 @@ def start_tryon(
         # Extract the images
         with torch.cuda.amp.autocast():
             with torch.no_grad():
-                prompt = "model is wearing " + garment_des
+                prompt = "model is wearing "
                 negative_prompt = (
                     "monochrome, lowres, bad anatomy, worst quality, low quality"
                 )
@@ -210,7 +215,7 @@ def start_tryon(
                         negative_prompt=negative_prompt,
                     )
 
-                    prompt = "a photo of " + garment_des
+                    prompt = "a photo of "
                     negative_prompt = (
                         "monochrome, lowres, bad anatomy, worst quality, low quality"
                     )
@@ -273,110 +278,30 @@ def start_tryon(
     if is_checked_crop:
         out_img = images[0].resize(crop_size)
         human_img_orig.paste(out_img, (int(left), int(top)))
-        print({"human_img_orig": human_img_orig})
-        print({"mask_gray": mask_gray})
         return human_img_orig, mask_gray
     else:
         return images[0], mask_gray
     # return images[0], mask_gray
 
+# open cv로 테스트 코드 
+if __name__ == "__main__":
+    print("\n모든 패키지 로드 후 테스트 진행")
+    
+    human = cv2.imread("./human.jpg")
+    clothes = cv2.imread("./clothes.jpg")
 
-garm_list = os.listdir(os.path.join(example_path, "cloth"))
-garm_list_path = [os.path.join(example_path, "cloth", garm) for garm in garm_list]
+    background = PIL.Image.fromarray(cv2.cvtColor(human, cv2.COLOR_BGR2RGB))
+    garm_img = PIL.Image.fromarray(cv2.cvtColor(clothes, cv2.COLOR_BGR2RGB))
 
-human_list = os.listdir(os.path.join(example_path, "human"))
-human_list_path = [os.path.join(example_path, "human", human) for human in human_list]
+    args = {
+        "dict": {"background": background, "layers": None, "composite": None},
+        "garm_img": garm_img,
+        "is_checked": True,
+        "is_checked_crop": True,
+        "denoise_steps": 30,
+        "seed": 42
+    }
 
-human_ex_list = []
-for ex_human in human_list_path:
-    ex_dict = {}
-    ex_dict["background"] = ex_human
-    ex_dict["layers"] = None
-    ex_dict["composite"] = None
-    human_ex_list.append(ex_dict)
-
-##default human
-
-
-image_blocks = gr.Blocks().queue()
-with image_blocks as demo:
-    gr.Markdown("## IDM-VTON 👕👔👚")
-    gr.Markdown(
-        "Virtual Try-on with your image and garment image. Check out the [source codes](https://github.com/yisol/IDM-VTON) and the [model](https://huggingface.co/yisol/IDM-VTON)"
-    )
-    with gr.Row():
-        with gr.Column():
-            imgs = gr.ImageEditor(
-                sources="upload",
-                type="pil",
-                label="Human. Mask with pen or use auto-masking",
-                interactive=True,
-            )
-            with gr.Row():
-                is_checked = gr.Checkbox(
-                    label="Yes",
-                    info="Use auto-generated mask (Takes 5 seconds)",
-                    value=True,
-                )
-            with gr.Row():
-                is_checked_crop = gr.Checkbox(
-                    label="Yes", info="Use auto-crop & resizing", value=False
-                )
-
-            example = gr.Examples(
-                inputs=imgs, examples_per_page=10, examples=human_ex_list
-            )
-
-        with gr.Column():
-            garm_img = gr.Image(label="Garment", sources="upload", type="pil")
-            with gr.Row(elem_id="prompt-container"):
-                with gr.Row():
-                    prompt = gr.Textbox(
-                        placeholder="Description of garment ex) Short Sleeve Round Neck T-shirts",
-                        show_label=False,
-                        elem_id="prompt",
-                    )
-            example = gr.Examples(
-                inputs=garm_img, examples_per_page=8, examples=garm_list_path
-            )
-        with gr.Column():
-            # image_out = gr.Image(label="Output", elem_id="output-img", height=400)
-            masked_img = gr.Image(
-                label="Masked image output",
-                elem_id="masked-img",
-                show_share_button=False,
-            )
-        with gr.Column():
-            # image_out = gr.Image(label="Output", elem_id="output-img", height=400)
-            image_out = gr.Image(
-                label="Output", elem_id="output-img", show_share_button=False
-            )
-
-    with gr.Column():
-        try_button = gr.Button(value="Try-on")
-        with gr.Accordion(label="Advanced Settings", open=False):
-            with gr.Row():
-                denoise_steps = gr.Number(
-                    label="Denoising Steps", minimum=20, maximum=40, value=30, step=1
-                )
-                seed = gr.Number(
-                    label="Seed", minimum=-1, maximum=2147483647, step=1, value=42
-                )
-
-    try_button.click(
-        fn=start_tryon,
-        inputs=[
-            imgs,
-            garm_img,
-            prompt,
-            is_checked,
-            is_checked_crop,
-            denoise_steps,
-            seed,
-        ],
-        outputs=[image_out, masked_img],
-        api_name="tryon",
-    )
-
-
-image_blocks.launch(server_name="0.0.0.0", server_port=80)
+    human_img_orig, _ = start_tryon(**args)
+    
+    cv2.imwrite("./res.jpg", cv2.cvtColor(np.array(human_img_orig), cv2.COLOR_RGB2BGR))

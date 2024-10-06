@@ -11,5 +11,5 @@ if ! [ -f  ./.initfile ]; then
     python first-setting.py
 fi
 
-# # 서버 실행
+# 서버 실행
 uvicorn Server:server --reload --port 8080 --host 0.0.0.0

@@ -1,0 +1,8 @@
+__pycache__
+ckpt/densepose/*
+ckpt/humanparsing/*
+ckpt/openpose/ckpts/*
+
+!ckpt/densepose/*.txt
+!ckpt/humanparsing/*.txt
+!ckpt/openpose/ckpts/*.txt

@@ -16,7 +16,7 @@
 2. 컨테이너 생성 & 실행
 
     ```bash
-    docker run -it --name fitpin -p 8080:8080 --gpus all --name fitpin fitpin
+    docker run -it --name fitpin -p 8080:8080 --gpus all fitpin
     ```
 
 ### 로컬

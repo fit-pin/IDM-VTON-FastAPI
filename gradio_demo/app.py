@@ -1,10 +1,8 @@
-import sys
-
 import PIL
 import PIL.Image
+import PIL.ImageFile
 import cv2
 
-sys.path.append("./")
 from PIL import Image
 from src.tryon_pipeline import StableDiffusionXLInpaintPipeline as TryonPipeline
 from src.unet_hacked_garmnet import UNet2DConditionModel as UNet2DConditionModel_ref
@@ -133,13 +131,32 @@ pipe.unet_encoder = UNet_Encoder
 
 
 def start_tryon(
-    dict: dict[Literal["background", "layers", "composite"], Any],
+    dict: dict[Literal["background", "layers", "composite"], PIL.Image.Image | Any],
     garm_img: PIL.Image.Image,
     is_checked: bool,
     is_checked_crop: bool,
     denoise_steps: int,
     seed: int,
-):
+) -> tuple[PIL.Image.Image, PIL.Image.Image]:
+    """
+    가상피팅을 진행합니다
+
+    Args:
+        dict (dict[Literal["background", "layers". "composite"], Any]): 
+            - background (PIL.Image.Image): 사람이미지
+            - layers (PIL.Image.Image | None): layers (없어도됨)
+            - composite (PIL.Image.Image | None): composite (없어도됨)
+        garm_img (PIL.Image.Image): 의류 이밎
+        is_checked (bool): Use auto-generated mask 설정 (사용 권장)
+        is_checked_crop (bool): 크롭 사용 설정 (사용 권장)
+        denoise_steps (int): 노이즈 재거 단계
+        seed (int): 랜덤 시드
+
+    Returns:
+        tuple[PIL.Image.Image, PIL.Image.Image]:
+            - [0]: 실체 피팅이미지
+            - [1]:  피팅된 예시 이미지
+    """
 
     openpose_model.preprocessor.body_estimation.model.to(device)
     pipe.to(device)

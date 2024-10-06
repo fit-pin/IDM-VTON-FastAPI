@@ -11,7 +11,7 @@ dependencies:
   - torchtriton=2.0.0=py310
   - torchvision=0.15.2=py310_cu118
   - pip=23.3.1=py310h06a4308_0
-
+  - fastapi==0.111.0
   - pip:
       - accelerate==0.25.0
       - torchmetrics==1.2.1
@@ -22,7 +22,6 @@ dependencies:
       - bitsandbytes==0.39.0
       - scipy==1.11.1
       - opencv-python
-      - gradio
       - fvcore
       - cloudpickle
       - omegaconf

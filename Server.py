@@ -10,7 +10,7 @@ import PIL.Image
 from fastapi import FastAPI, Form, HTTPException, Request, Response, UploadFile
 
 from gradio_demo import app
-
+from typing import Literal
 
 logger = logging.getLogger("uvicorn.error")
 server = FastAPI(
@@ -23,6 +23,7 @@ def root(
     req: Request,
     humanImg: UploadFile,
     clothesImg: UploadFile,
+    category: Literal["상의", "하의", "드레스"] = Form(),
     is_checked: bool = Form(True),
     is_checked_crop: bool = Form(True),
     denoise_steps: int = Form(30),
@@ -37,6 +38,7 @@ def root(
         result, _ = app.start_tryon(
             dict={"background": background, "layers": None, "composite": None},
             garm_img=garm_img,
+            category=category,
             is_checked=is_checked,
             is_checked_crop=is_checked_crop,
             denoise_steps=denoise_steps,

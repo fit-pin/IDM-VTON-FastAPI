@@ -133,6 +133,7 @@ pipe.unet_encoder = UNet_Encoder
 def start_tryon(
     dict: dict[Literal["background", "layers", "composite"], PIL.Image.Image | Any],
     garm_img: PIL.Image.Image,
+    category: Literal["상의", "하의", "드레스"],
     is_checked: bool,
     is_checked_crop: bool,
     denoise_steps: int,
@@ -147,6 +148,7 @@ def start_tryon(
             - layers (PIL.Image.Image | None): layers (없어도됨)
             - composite (PIL.Image.Image | None): composite (없어도됨)
         garm_img (PIL.Image.Image): 의류 이미지
+        category (Literal["상의", "하의", "드레스"]): 의류 타입
         is_checked (bool): Use auto-generated mask 설정 (사용 권장)
         is_checked_crop (bool): 크롭 사용 설정 (사용 권장)
         denoise_steps (int): 노이즈 재거 단계
@@ -158,6 +160,9 @@ def start_tryon(
             - [1]:  피팅된 예시 이미지
     """
 
+    # 카테고리 분류 추가
+    category_dict = {"드레스": "dresses", "상의": "upper_body", "하의": "lower_body"}
+    
     openpose_model.preprocessor.body_estimation.model.to(device)
     pipe.to(device)
     pipe.unet_encoder.to(device)
@@ -182,7 +187,7 @@ def start_tryon(
     if is_checked:
         keypoints = openpose_model(human_img.resize((384, 512)))
         model_parse, _ = parsing_model(human_img.resize((384, 512)))
-        mask, mask_gray = get_mask_location("hd", "upper_body", model_parse, keypoints)
+        mask, mask_gray = get_mask_location("hd", category_dict[category], model_parse, keypoints)
         mask = mask.resize((768, 1024))
     else:
         mask = pil_to_binary_mask(dict["layers"][0].convert("RGB").resize((768, 1024)))

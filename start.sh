@@ -12,4 +12,4 @@ if ! [ -f  ./.initfile ]; then
 fi
 
 # 서버 실행
-uvicorn Server:server --reload --port 8080 --host 0.0.0.0
+uvicorn Server:server --reload --port 8080 --host 0.0.0.0 --log-config ./log-config.yml

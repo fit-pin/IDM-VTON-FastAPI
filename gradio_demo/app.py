@@ -143,10 +143,10 @@ def start_tryon(
 
     Args:
         dict (dict[Literal["background", "layers". "composite"], Any]): 
-            - background (PIL.Image.Image): 사람이미지
+            - background (PIL.Image.Image): 사람 이미지
             - layers (PIL.Image.Image | None): layers (없어도됨)
             - composite (PIL.Image.Image | None): composite (없어도됨)
-        garm_img (PIL.Image.Image): 의류 이밎
+        garm_img (PIL.Image.Image): 의류 이미지
         is_checked (bool): Use auto-generated mask 설정 (사용 권장)
         is_checked_crop (bool): 크롭 사용 설정 (사용 권장)
         denoise_steps (int): 노이즈 재거 단계

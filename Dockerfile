@@ -52,4 +52,4 @@ source ~/miniconda3/etc/profile.d/conda.sh && \
 conda activate idm
 
 # 컨테이너 시작시 start.sh 파일 실행
-CMD ["/bin/bash", "-c", "./start.sh"]
+CMD "./start.sh"

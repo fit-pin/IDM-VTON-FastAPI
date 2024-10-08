@@ -47,9 +47,8 @@ WORKDIR "/home/${USER_NAME}/IDM-VTON-FastAPI"
 
 # conda 가상환경 만들고 활성화
 RUN conda env create -f environment.yaml && \
-chmod +x start.sh && \
 source ~/miniconda3/etc/profile.d/conda.sh && \
 conda activate idm
 
 # 컨테이너 시작시 start.sh 파일 실행
-CMD "./start.sh"
+CMD ["/bin/bash", "start.sh"]

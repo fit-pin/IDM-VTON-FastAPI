@@ -5,9 +5,9 @@
 
 ## API 
 
-### [**POST**] [/api/idm](http://fitpin-idm.kro.kr:8080/api/idm)
+### [**POST**] [/api/idm](http://fitpin-idm.kro.kr/api/idm)
 
-- [Swagger 테스트](http://fitpin-idm.kro.kr:8080/docs#/default/root_api_idm__post) 
+- [Swagger 테스트](http://fitpin-idm.kro.kr/docs#/default/root_api_idm__post) 
 
 
 ## 사용법

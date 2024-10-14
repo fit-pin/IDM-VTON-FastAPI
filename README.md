@@ -14,18 +14,9 @@
 
 ### Docker 사용
 
-1. Dockerfile 이미지 빌드
-
-    ```bash
-    docker buildx build --load -t fitpin .
-    ```
-
-
-2. 컨테이너 생성 & 실행
-
-    ```bash
-    docker run -it --name fitpin -p 80:80 --gpus all fitpin
-    ```
+```bash
+docker run -it --name fitpin-vton -p 80:80 --gpus all ghcr.io/fit-pin/fitpin-vton-backend
+```
 
 ### 로컬
 

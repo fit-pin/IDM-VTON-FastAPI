@@ -31,7 +31,7 @@ from detectron2.data.detection_utils import (
 )
 from torchvision.transforms.functional import to_pil_image
 
-device = "cuda:0" if torch.cuda.is_available() else "cpu"
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 def pil_to_binary_mask(pil_image, threshold=0):

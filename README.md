@@ -15,7 +15,7 @@
 ### Docker 사용
 
 ```bash
-docker run -it --name fitpin-vton -p 80:80 --gpus all ghcr.io/fit-pin/fitpin-vton-backend
+docker run -it --name fitpin-idm -p 80:80 --gpus all ghcr.io/fit-pin/fitpin-vton-backend
 ```
 
 ### 로컬

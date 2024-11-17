@@ -1,13 +1,13 @@
 # IDM-VTON-FastAPI
 [yisol/IDM-VTON](https://github.com/yisol/IDM-VTON)의 자체 FastAPI 서버 구현 본
 
-- [fitpin_ar_backend `try-on` API](https://github.com/fit-pin/fitpin_ar_backend?tab=readme-ov-file#post-try-on-%EC%B1%84%ED%98%95-%EC%82%AC%EC%A7%84%EA%B3%BC-%EC%9D%98%EB%A5%98-%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B0%80-%ED%95%A9%EC%84%B1%EB%90%9C-%EC%9D%B4%EB%AF%B8%EC%A7%80%EB%A5%BC-%EB%A6%AC%ED%84%B4%ED%95%A9%EB%8B%88%EB%8B%A4) 에 처리를 담당 하는 서버
+- [fitpin_backend_ar `try-on` API](https://github.com/fit-pin/fitpin_backend_ar?tab=readme-ov-file#post-try-on-%EC%B1%84%ED%98%95-%EC%82%AC%EC%A7%84%EA%B3%BC-%EC%9D%98%EB%A5%98-%EC%9D%B4%EB%AF%B8%EC%A7%80%EA%B0%80-%ED%95%A9%EC%84%B1%EB%90%9C-%EC%9D%B4%EB%AF%B8%EC%A7%80%EB%A5%BC-%EB%A6%AC%ED%84%B4%ED%95%A9%EB%8B%88%EB%8B%A4) 에 처리를 담당 하는 서버
 
 ## API 
 
-### [**POST**] [/api/idm](http://fitpin-idm.kro.kr/api/idm)
+### [**POST**] [/api/idm](https://fitpin.kro.kr/ar-idm-api/api/idm/)
 
-- [Swagger 테스트](http://fitpin-idm.kro.kr/docs#/default/root_api_idm__post) 
+- [Swagger 테스트](https://fitpin.kro.kr/ar-idm-api/docs#/default/root_api_idm__post)
 
 
 ## 사용법

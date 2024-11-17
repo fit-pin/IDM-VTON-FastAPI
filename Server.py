@@ -14,7 +14,7 @@ from typing import Literal
 
 logger = logging.getLogger("uvicorn.error")
 server = FastAPI(
-    redoc_url=None, on_startup=(lambda: (logger.info("서버가 정삭적으로 실행함")),)
+    redoc_url=None, root_path="/ar-idm-api", on_startup=(lambda: (logger.info("서버가 정삭적으로 실행함")),)
 )
 
 
